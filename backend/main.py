@@ -197,7 +197,7 @@ async def get_emails(request: Request):
             raise HTTPException(status_code=400, detail="Could not determine user email")
         
         # Get emails and process them
-        emails, moved_to_gator = gmail_service.list_emails(credentials)
+        emails, moved_count = gmail_service.list_emails(credentials)
         
         # Log activity for each email
         if user_email:
@@ -212,10 +212,10 @@ async def get_emails(request: Request):
                     logger.error(f"Error logging email activity: {str(e)}")
                     # Continue processing other emails even if logging fails
         
-        logger.debug(f"Retrieved {len(emails)} emails, moved {moved_to_gator} to Lator Gator")
+        logger.debug(f"Retrieved {len(emails)} emails, moved {moved_count} to Lator Gator")
         return {
             "emails": emails,
-            "moved_count": moved_to_gator
+            "moved_count": moved_count
         }
         
     except Exception as e:
