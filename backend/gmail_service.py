@@ -212,7 +212,7 @@ class GmailService:
             
             # Process messages
             processed_emails = []
-            moved_to_gator = 0
+            moved_count = 0
             
             for message in messages:
                 try:
@@ -248,13 +248,16 @@ class GmailService:
                         'labels': msg.get('labelIds', []),
                         'moved_to_gator': moved_to_gator
                     })
+
+                    if moved_to_gator:
+                        moved_count += 1
                     
                 except Exception as e:
                     logger.error(f"Error processing message {message['id']}: {str(e)}")
                     continue
             
             logger.debug(f"Successfully processed {len(processed_emails)} emails")
-            return processed_emails, moved_to_gator
+            return processed_emails, moved_count
             
         except Exception as e:
             logger.error(f"Error in list_emails: {str(e)}")
